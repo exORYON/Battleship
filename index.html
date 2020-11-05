@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Battleship</title>
+        <link href="https://fonts.googleapis.com/css2?family=Syne+Tactile&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <nav class="menu"> 
+        <details>
+            <summary>Menu</summary>
+            <ul>
+                <li>Change nickname</li>
+                <li>Restart</li>
+                <li>Statistics</li>
+            </ul>
+        </details>
+    </nav>
+        <span id="change-nickname"></span><span id="restart"></span>
+    <div class="content">
+            
+        <div class="container-player" id="player-one">
+                <span class="player-nickname" id="p1-nickname-text"></span>
+            <div class="oceans">
+                <div class="players-ocean ocean" id="ocean-one">
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+                </div>
+
+                <div class="players-shooting-ocean ocean" id="shooting-ocean-one">
+                    <!-- <div class="row ">
+                        <div class="cell">A</div>
+                        <div class="cell">B</div>
+                        <div class="cell">C</div>
+                        <div class="cell">D</div>
+                        <div class="cell">E</div>
+                        <div class="cell">F</div>
+                        <div class="cell">G</div>
+                        <div class="cell">H</div>
+                        <div class="cell">I</div>
+                        <div class="cell">J</div>
+                    </div> -->
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="container-player" id="player-two">
+            <span class="player-nickname" id="p2-nickname-text"></span>
+            <div class="players-ocean ocean" id="ocean-two">
+                <div class="oceans">
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+                </div>
+                <div class="players-shooting-ocean ocean" id="shooting-ocean-two">
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                        <div class="cell"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="roulette">
+            <div class="container">
+                <div class="nickname-container">
+                    <span>Your nickname:</span>
+                    <input type="text" placeholder=" Nickname" id="p1-nickname-input">
+                </div>
+    
+                <div class="nickname-container">
+                        <span>Your opponents nickname:</span>
+                        <input type="text" placeholder=" Nickname" id="p2-nickname-input">
+                </div>
+            </div>
+                <button id="nickname-sumbit-btn">OK</button>
+        </div>
+</body>
+    <script src="script.js" defer></script>
+</html>
