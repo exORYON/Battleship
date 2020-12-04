@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Battleship</title>
-        <link href="https://fonts.googleapis.com/css2?family=Syne+Tactile&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,30 +14,29 @@
         <details>
             <summary>Menu</summary>
             <ul>
-                <li>Change nickname</li>
-                <li>Restart</li>
-                <li>Statistics</li>
+                <li class="change-nickname___button">Change nickname</li>
+                <li class="restart-game___button">Restart</li>
+                <li class="show-statistics___button">Statistics</li>
             </ul>
         </details>
     </nav>
-        <span id="change-nickname"></span><span id="restart"></span>
+ 
     <div class="content">
-            
         <div class="container-player" id="player-one">
                 <span class="player-nickname" id="p1-nickname-text"></span>
             <div class="oceans">
                 <div class="players-ocean ocean" id="ocean-one">
                     <div class="row">
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
-                        <div class="cell"> </div>
+                        <div class="cell 1 1"></div>
+                        <div class="cell 1 2"></div>
+                        <div class="cell 1 3"></div>
+                        <div class="cell 1 4"></div>
+                        <div class="cell 1 5"></div>
+                        <div class="cell 1 6"></div>
+                        <div class="cell 1 7"></div>
+                        <div class="cell 1 8"></div>
+                        <div class="cell 1 9"></div>
+                        <div class="cell 1 10"></div>
                     </div>
 
                     <div class="row">
@@ -158,18 +158,6 @@
                 </div>
 
                 <div class="players-shooting-ocean ocean" id="shooting-ocean-one">
-                    <!-- <div class="row ">
-                        <div class="cell">A</div>
-                        <div class="cell">B</div>
-                        <div class="cell">C</div>
-                        <div class="cell">D</div>
-                        <div class="cell">E</div>
-                        <div class="cell">F</div>
-                        <div class="cell">G</div>
-                        <div class="cell">H</div>
-                        <div class="cell">I</div>
-                        <div class="cell">J</div>
-                    </div> -->
 
                     <div class="row">
                         <div class="cell"> </div>
@@ -301,6 +289,17 @@
                         <div class="cell"> </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="placing-container">
+                <label for="[ ]ship">4 Battleship(s) left [ ]</label>
+                    <input type="radio" name="ships" id="[ ]ship" value="[ ]ship"><br>
+                <label for="[ ][ ]ship">3 Battleship(s) left [ ][ ]</label>
+                    <input type="radio" name="ships" id="[ ][ ]ship" value="[ ][ ]ship"><br>
+                <label for="[ ][ ][ ]ship">2 Battleship(s) left [ ][ ][ ]</label>
+                    <input type="radio" name="ships" id="[ ][ ][ ]ship" value="[ ][ ][ ]ship"><br>
+                <label for="[ ][ ][ ][ ]ship">1 Battleship(s) left [ ][ ][ ][ ]</label>
+                    <input type="radio" name="ships" id="[ ][ ][ ][ ]ship" value="[ ][ ][ ][ ]ship"><br>
             </div>
         </div>
             
@@ -573,18 +572,23 @@
         </div>
     </div>
         <div class="roulette">
+            <div class="close-form___button">
+                <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                </svg>
+            </div>
             <div class="container">
                 <div class="nickname-container">
-                    <span>Your nickname:</span>
-                    <input type="text" placeholder=" Nickname" id="p1-nickname-input">
+                    <span>Your nickname</span>
+                    <input type="text" placeholder=" ORYON" id="p1-nickname-input" value="Player 1">
                 </div>
     
                 <div class="nickname-container">
-                        <span>Your opponents nickname:</span>
-                        <input type="text" placeholder=" Nickname" id="p2-nickname-input">
+                        <span>Your opponents nickname</span>
+                        <input type="text" placeholder=" ERIDANN" id="p2-nickname-input" value="Player 2">
                 </div>
             </div>
-                <button id="nickname-sumbit-btn">OK</button>
+                <button id="nickname-sumbit___button">OK</button>
         </div>
 </body>
     <script src="script.js" defer></script>

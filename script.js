@@ -1,16 +1,26 @@
+"use strict";
+
 let p1Nickname = localStorage.getItem("playerOneNickname");
 let p2Nickname = localStorage.getItem("playerTwoNickname");
-let changeNicknameForm = document.querySelector(".roulette");
+const changeNicknameForm = document.querySelector(".roulette");
 
-let playerOne = {
+const playerOne = {
   nickname: "",
+  
+  shipsPlaced: false,
+  shipsLeft: [null,4,3,2,1],
+  
   shotsTotal: 0,
   shotsInGoal: 0,
   shotsMissed: 0,
 };
 
-let playerTwo = {
+const playerTwo = {
   nickname: "",
+  
+  shipsPlaced: false,
+  shipsLeft: [null,4,3,2,1],
+
   shotsTotal: 0,
   shotsInGoal: 0,
   shotsMissed: 0,
@@ -27,45 +37,99 @@ function showForm() {
   changeNicknameForm.style.display = "flex";
 }
 
-let nicknameSubmitBtn = document.getElementById("nickname-sumbit-btn");
-nicknameSubmitBtn.onclick = function () {
-  setNicknames();
-};
+const changeNicknameButton = document.querySelector(".change-nickname___button");
+const restartGameButton = document.querySelector(".restart-game___button");
+const showStatisticsButton = document.querySelector(".show-statistics___button");
+const nicknameSubmitBtn = document.getElementById("nickname-sumbit___button");
+const closeFormButton = document.querySelector(".close-form___button");
 
-let changeNicknameButton = document.getElementById("change-nickname");
 changeNicknameButton.onclick = function () {
   showForm();
 };
 
-function setNicknames() {
-  let p1NicknameInp = document.getElementById("p1-nickname-input");
-  playerOne.nickname = p1NicknameInp.value;
-  localStorage.setItem("playerOneNickname", p1NicknameInp.value);
+restartGameButton.onclick = function () {
+  restartGame();
+  location.reload();
+};
 
-  let p2NicknameInp = document.getElementById("p2-nickname-input");
-  playerTwo.nickname = p2NicknameInp.value;
-  localStorage.setItem("playerTwoNickname", p2NicknameInp.value);
+showStatisticsButton.onclick = function () {
+  showStats();
+};
 
-  document.getElementById("p1-nickname-text").innerHTML = playerOne.nickname;
-  document.getElementById("p2-nickname-text").innerHTML = playerTwo.nickname;
 
+nicknameSubmitBtn.onclick = function () {
+  setNicknames();
+};
+
+closeFormButton.onclick = function () {
   changeNicknameForm.style.display = "none";
 }
-// gameStarts();
 
-function gameStarts() {
-  let x = prompt("Where should your boat starts? (by X)", "0");
-  x = x.trim();
-  x = x.toLowerCase();
-  x = Number(x);
+function setNicknames() {
+  if (changeNicknameForm.style.display === "none") {
+    changeNicknameForm.style.display = "flex";
+  }
 
-  let y = prompt("Where should your boat starts? (by Y)", "0");
-  y = y.trim();
-  y = y.toLowerCase();
-  y = Number(y);
+  const p1NicknameInp = document.getElementById("p1-nickname-input");
+  const p2NicknameInp = document.getElementById("p2-nickname-input");
 
-  let XorY = prompt("Should your boat be Horizontal or Vertical?", "H or V");
-  XorY = XorY.trim();
-  XorY = XorY.toLowerCase();
+  playerOne.nickname = p1NicknameInp.value;
+  playerTwo.nickname = p2NicknameInp.value;
+
+  if (playerOne.nickname === playerTwo.nickname) {
+    let error = document.createElement('div');
+
+    error.classList.add("error");
+    error.innerText = "Nicknames must be different!";
+    error.style.display = "block";
+
+    changeNicknameForm.append(error);
+      setTimeout(function () {
+        error.style.display = "none";
+      }, 1500);
+  } else {
+    localStorage.setItem("playerOneNickname", p1NicknameInp.value);
+    localStorage.setItem("playerTwoNickname", p2NicknameInp.value);
+  
+    document.getElementById("p1-nickname-text").innerHTML = playerOne.nickname;
+    document.getElementById("p2-nickname-text").innerHTML = playerTwo.nickname;
+  
+    if (changeNicknameForm.style.display === "flex") {
+      changeNicknameForm.style.display = "none";
+    }
+  }
 }
 
+// TODO: RESET STATS
+function restartGame() {
+  alert("restarted(not working!");
+}
+
+// TODO: SHOW STATS
+function showStats() {
+  alert("*stats*(not working!)");
+}
+
+const playerOneOcean = document.querySelector("#ocean-one");
+const playerTwoOcean = document.querySelector("#ocean-two");
+
+playerOneOcean.addEventListener('click',e => oceanOne(e))
+playerTwoOcean.addEventListener('click',e => oceanTwo(e))
+
+function oceanOne(event) {
+  if (playerOne.shipsPlaced === false) {
+    placeShips("one");
+  }
+}
+
+function oceanTwo(event) {
+  
+}
+
+function placeShips(player) {
+  (player === "one") ? {
+
+  } : {
+
+  }
+}

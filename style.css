@@ -12,7 +12,9 @@ body {
     width: 100vw;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne Tactile', cursive;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1.5px;
+    color: rgba(0, 0, 0, 0.92);
     font-size: 18px;
 }
 
@@ -28,17 +30,44 @@ body {
 }
 
 .menu {
+    position: relative;
     background-color: #48cae4;
     width: 140px;
     padding: 10px 25px;
     border-radius: 5px;
     margin: 0 15px;
+    letter-spacing: 1.1px;
     cursor: pointer;
+    border: none;
+    user-select: none;
+}
+
+summary, summary:focus, summary:active {
+    outline: none !important;
+    position: relative;
+}
+
+.menu ul {
+    background-color: #00b4d8;
+    cursor: default;
+    position: absolute;
+    top: 50px;
+    left: -3.5px;
+    padding: 5px;
+    width: 105%;
 }
 
 .menu ul li {
     list-style-type: none;
     user-select: none;
+    border: none;
+    
+}
+
+.menu ul li:hover {
+    cursor: pointer;
+    background-color: #ADE8F4;
+    padding: 0 5px;
 }
 
 .container-player {
@@ -85,13 +114,14 @@ body {
     padding: 2px;
     border: 1px solid rgba(0, 0, 0, 0.4);
     white-space: pre;
+    height: 10%;
     width: 10%;
     cursor: cell;
     user-select: none;
 }
 
 .cell:hover {
-    background-color: #0077b6;
+    background-color: #ADE8F4;
     border: 1px solid black;
 }
 
@@ -127,7 +157,7 @@ body {
     margin: 0 10px;
 }
 
-#nickname-sumbit-btn {
+#nickname-sumbit___button {
     padding: 5px 30px;
     border-radius: 5px;
     cursor: pointer;
@@ -135,7 +165,7 @@ body {
     transition: 0.1s ease all;
 }
 
-#nickname-sumbit-btn:hover {
+#nickname-sumbit___button:hover {
     background-color: #fff;
 }
 
@@ -161,4 +191,23 @@ body {
 
 .oceans {
     display: inline-flex;
+}
+
+.error {
+    transition: all 0.25s;
+    color: rgb(155, 1, 1);
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.close-form___button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    cursor: pointer;
+}
+
+.placing-container {
+    margin-top: 25px;
+    align-self: flex-start;
 }
