@@ -1,7 +1,7 @@
 "use strict";
 
-let p1Nickname = localStorage.getItem("playerOneNickname");
-let p2Nickname = localStorage.getItem("playerTwoNickname");
+let p1Nickname = sessionStorage.getItem("playerOneNickname");
+let p2Nickname = sessionStorage.getItem("playerTwoNickname");
 const changeNicknameForm = document.querySelector(".roulette");
 
 const playerOne = {
@@ -62,6 +62,10 @@ nicknameSubmitBtn.onclick = function () {
 };
 
 closeFormButton.onclick = function () {
+  if (playerOne.nickname == "" || playerTwo.nickname == "" ) {
+    nicknameError("Please set nickname!");
+    return;
+  }
   changeNicknameForm.style.display = "none";
 }
 
@@ -73,23 +77,15 @@ function setNicknames() {
   const p1NicknameInp = document.getElementById("p1-nickname-input");
   const p2NicknameInp = document.getElementById("p2-nickname-input");
 
-  playerOne.nickname = p1NicknameInp.value;
-  playerTwo.nickname = p2NicknameInp.value;
-
-  if (playerOne.nickname === playerTwo.nickname) {
-    let error = document.createElement('div');
-
-    error.classList.add("error");
-    error.innerText = "Nicknames must be different!";
-    error.style.display = "block";
-
-    changeNicknameForm.append(error);
-      setTimeout(function () {
-        error.style.display = "none";
-      }, 1500);
+  if (p1NicknameInp.value === p2NicknameInp.value) {
+    nicknameError("Nicknames must be different!");
+    return;
   } else {
-    localStorage.setItem("playerOneNickname", p1NicknameInp.value);
-    localStorage.setItem("playerTwoNickname", p2NicknameInp.value);
+    playerOne.nickname = p1NicknameInp.value;
+    playerTwo.nickname = p2NicknameInp.value;  
+
+    sessionStorage.setItem("playerOneNickname", p1NicknameInp.value);
+    sessionStorage.setItem("playerTwoNickname", p2NicknameInp.value);
   
     document.getElementById("p1-nickname-text").innerHTML = playerOne.nickname;
     document.getElementById("p2-nickname-text").innerHTML = playerTwo.nickname;
@@ -97,6 +93,8 @@ function setNicknames() {
     if (changeNicknameForm.style.display === "flex") {
       changeNicknameForm.style.display = "none";
     }
+
+    preGame();
   }
 }
 
@@ -110,11 +108,63 @@ function showStats() {
   alert("*stats*(not working!)");
 }
 
+const preGameContainer = document.querySelector(".pre-game___container");
 const playerOneOcean = document.querySelector("#ocean-one");
 const playerTwoOcean = document.querySelector("#ocean-two");
 
 playerOneOcean.addEventListener('click',e => oceanOne(e))
 playerTwoOcean.addEventListener('click',e => oceanTwo(e))
+
+function nicknameError(text) {
+  let error = document.createElement('div');
+
+  error.classList.add("error");
+  error.innerText = text;
+  error.style.display = "block";
+
+  changeNicknameForm.append(error);
+    setTimeout(function () {
+      error.style.display = "none";
+    }, 1500);
+
+}
+
+function preGame() {
+  let winner;
+  const coin = document.querySelector(".coin");
+
+  document.querySelector(".player-one-nickname").innerText = playerOne.nickname;
+  document.querySelector(".player-two-nickname").innerText = playerTwo.nickname;
+  document.querySelector(".front").innerText = playerOne.nickname;
+  document.querySelector(".back").innerText = playerTwo.nickname;
+  
+  preGameContainer.style.display = "flex";
+  
+  coin.onclick = function () {
+    winner = Math.random() * 2;
+    
+    if (winner <= 1) {
+      winner = playerOne.nickname;
+    } else {
+      winner = playerTwo.nickname;
+    }
+
+    coin.innerHTML = `${winner} attacking first!`;
+    coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
+    coin.style.color = "#2ECC71";
+
+    let startGameButton = document.createElement("button");
+    
+    startGameButton.classList.add = "start-game___button";
+    startGameButton.innerText = "Start game!";
+
+    preGameContainer.append(startGameButton);
+    startGameButton.addEventListener("click", function () {
+      placeShips(winner);
+    })
+  }
+}
+
 
 function oceanOne(event) {
   if (playerOne.shipsPlaced === false) {
@@ -127,9 +177,7 @@ function oceanTwo(event) {
 }
 
 function placeShips(player) {
-  (player === "one") ? {
+  preGameContainer.style.display = "none";
 
-  } : {
-
-  }
+  alert(`Congrats, ${player}`);
 }
