@@ -2,6 +2,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    user-select: none;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 body {
@@ -142,31 +150,36 @@ summary, summary:focus, summary:active {
     display: none;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+.input-container___inner input {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-weight: bold;
 }
 
-.nickname-container {
-    display: inline-flex;
-    margin-bottom: 5px;
-}
-
-.nickname-container input {
-    margin: 0 10px;
+.versus {
+    font-size: 0.6em;
+    font-weight: 500;
+    margin: 5px 0;
 }
 
 #nickname-sumbit___button {
-    padding: 5px 30px;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-top: 8px;
+    padding: 1px 10px;
+    background-color: transparent;
+    border: 3px solid black;
     font-weight: bold;
-    transition: 0.1s ease all;
+    text-transform: uppercase;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1.3px;
+    font-size: 0.8em;
+    transition: .25s all;
 }
 
 #nickname-sumbit___button:hover {
-    background-color: #fff;
+    cursor: pointer;
+    background-color: rgba(245, 245, 245, 0.555);
 }
 
 .nickname-container span {
@@ -202,7 +215,7 @@ summary, summary:focus, summary:active {
     justify-content: center;
 }
 
-.versus {
+.vs {
     font-size: 0.5em;
 }
 
@@ -231,17 +244,18 @@ summary, summary:focus, summary:active {
     cursor: pointer;
     left: 0;
     top: 0;
+    background-color: rgba(245, 245, 245, 0.555);
 }
 
 .front{
     animation: front-rotation 5s infinite;
-    background-color: rgb(255, 255, 255, 0.25);
+    
     border: 2px solid black;
 }
 
 .back{
     animation: back-rotation 5s infinite;
-    background-color: rgb(255, 255, 255, 0.25);
+
     border: 2px solid black;
 }
   
@@ -261,6 +275,29 @@ summary, summary:focus, summary:active {
     to {
         transform: rotateY(540deg);
     }
+}
+
+.start-game___button {
+    margin-top: 8px;
+    padding: 1px 10px;
+    background-color: transparent;
+    border: 3px solid black;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1.3px;
+    font-size: 0.8em;
+    transition: .25s all;
+    background-color: rgba(245, 245, 245, 0.555);
+}
+
+.start-game___button:hover {
+    cursor: pointer;
+    background-color: rgba(245, 245, 245, 0.755);
+}
+
+#player-one {
+    display: none;
 }
 
 #player-two {
@@ -289,7 +326,8 @@ summary, summary:focus, summary:active {
     background-color: rgb(0,0,0,0.25);
     padding: 25px;
     border-radius: 25px;
-    margin-top: 25px;
+    margin-top: 55px;
+    display: none;
 }
 
 .placing-container label, .placing-container input {

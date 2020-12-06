@@ -48,7 +48,8 @@ changeNicknameButton.onclick = function () {
 };
 
 restartGameButton.onclick = function () {
-  restartGame();
+  sessionStorage.removeItem("playerOneNickname");
+  sessionStorage.removeItem("playerTwoNickname");
   location.reload();
 };
 
@@ -98,14 +99,10 @@ function setNicknames() {
   }
 }
 
-// TODO: RESET STATS
-function restartGame() {
-  alert("restarted(not working!");
-}
-
 // TODO: SHOW STATS
 function showStats() {
   alert("*stats*(not working!)");
+  // TODO: RESET STATS WHEN RESTARTED
 }
 
 const preGameContainer = document.querySelector(".pre-game___container");
@@ -129,8 +126,10 @@ function nicknameError(text) {
 
 }
 
+let coinWinner;
+
 function preGame() {
-  let winner;
+ 
   const coin = document.querySelector(".coin");
 
   document.querySelector(".player-one-nickname").innerText = playerOne.nickname;
@@ -141,43 +140,72 @@ function preGame() {
   preGameContainer.style.display = "flex";
   
   coin.onclick = function () {
-    winner = Math.random() * 2;
-    
-    if (winner <= 1) {
-      winner = playerOne.nickname;
+    if (coinWinner !== undefined) {
+      return;
     } else {
-      winner = playerTwo.nickname;
+      coinWinner = Math.random() * 2;
+      
+      if (coinWinner <= 1) {
+        coinWinner = playerOne.nickname;
+      } else {
+        coinWinner = playerTwo.nickname;
+      }
+
+      coin.innerHTML = `${coinWinner} attacks first!`;
+      coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
+      coin.style.color = "#39dfb0";
+      coin.style.borderRadius = "50%";
+      coin.style.fontSize = "0.65em";
+      coin.style.letterSpacing = "1.5px";
+
+      let startGameButton = document.createElement("button");
+      
+      startGameButton.classList.add("start-game___button");
+      startGameButton.innerText = "Start game!";
+
+      preGameContainer.append(startGameButton);
+      startGameButton.addEventListener("click", function () {
+        shipsMenu(coinWinner);
+      })
     }
-
-    coin.innerHTML = `${winner} attacking first!`;
-    coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
-    coin.style.color = "#2ECC71";
-
-    let startGameButton = document.createElement("button");
-    
-    startGameButton.classList.add = "start-game___button";
-    startGameButton.innerText = "Start game!";
-
-    preGameContainer.append(startGameButton);
-    startGameButton.addEventListener("click", function () {
-      placeShips(winner);
-    })
   }
 }
 
 
 function oceanOne(event) {
   if (playerOne.shipsPlaced === false) {
-    placeShips("one");
+    alert("Placed")
+  } else {
+
   }
 }
 
 function oceanTwo(event) {
-  
+  if (playerOne.shipsPlaced === false) {
+    alert("Placed")
+  } else {
+
+  }
 }
 
-function placeShips(player) {
-  preGameContainer.style.display = "none";
+const playerOneContainer = document.querySelector("#player-one");
+const playerTwoContainer = document.querySelector("#player-two");
+const shipsList = document.querySelector(".placing-container");
 
-  alert(`Congrats, ${player}`);
+function shipsMenu(winner) {
+  preGameContainer.style.display = "none";
+  console.log(`Congrats, ${winner}.`);
+  if (winner === playerOne.nickname) {
+
+    playerTwoContainer.style.display = "none";
+    playerOneContainer.style.display = "flex";
+    shipsList.style.display = "block";
+
+  } else {
+
+    playerOneContainer.style.display = "none";
+    playerTwoContainer.style.display = "flex";
+    shipsList.style.display = "block";
+
+  }
 }
