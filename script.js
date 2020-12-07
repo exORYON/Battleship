@@ -1,7 +1,10 @@
 "use strict";
 
+let coinWinner;
+let currentPlayer;
 let p1Nickname = sessionStorage.getItem("playerOneNickname");
 let p2Nickname = sessionStorage.getItem("playerTwoNickname");
+
 const changeNicknameForm = document.querySelector(".roulette");
 
 const playerOne = {
@@ -57,7 +60,6 @@ showStatisticsButton.onclick = function () {
   showStats();
 };
 
-
 nicknameSubmitBtn.onclick = function () {
   setNicknames();
 };
@@ -67,7 +69,7 @@ closeFormButton.onclick = function () {
     nicknameError("Please set nickname!");
     return;
   }
-  changeNicknameForm.style.display = "none";
+    changeNicknameForm.style.display = "none";
 }
 
 function setNicknames() {
@@ -94,23 +96,21 @@ function setNicknames() {
     if (changeNicknameForm.style.display === "flex") {
       changeNicknameForm.style.display = "none";
     }
-
-    preGame();
+      preGame();
   }
 }
 
-// TODO: SHOW STATS
 function showStats() {
-  alert("*stats*(not working!)");
-  // TODO: RESET STATS WHEN RESTARTED
+  showModalError("Stats will be aded later!");
+ // TODO: SHOWSTATS
 }
 
 const preGameContainer = document.querySelector(".pre-game___container");
 const playerOneOcean = document.querySelector("#ocean-one");
 const playerTwoOcean = document.querySelector("#ocean-two");
 
-playerOneOcean.addEventListener('click',e => oceanOne(e))
-playerTwoOcean.addEventListener('click',e => oceanTwo(e))
+playerOneOcean.addEventListener('click',e => shipOnOceanOne(e))
+playerTwoOcean.addEventListener('click',e => shipOnOceanTwo(e))
 
 function nicknameError(text) {
   let error = document.createElement('div');
@@ -123,13 +123,9 @@ function nicknameError(text) {
     setTimeout(function () {
       error.style.display = "none";
     }, 1500);
-
 }
 
-let coinWinner;
-
 function preGame() {
- 
   const coin = document.querySelector(".coin");
 
   document.querySelector(".player-one-nickname").innerText = playerOne.nickname;
@@ -151,61 +147,141 @@ function preGame() {
         coinWinner = playerTwo.nickname;
       }
 
-      coin.innerHTML = `${coinWinner} attacks first!`;
-      coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
-      coin.style.color = "#39dfb0";
-      coin.style.borderRadius = "50%";
-      coin.style.fontSize = "0.65em";
-      coin.style.letterSpacing = "1.5px";
-
-      let startGameButton = document.createElement("button");
+      currentPlayer = coinWinner;
+      coin.classList.add("spinning");
       
-      startGameButton.classList.add("start-game___button");
-      startGameButton.innerText = "Start game!";
+      setTimeout(function() {
+        coin.classList.remove("spinning");
 
-      preGameContainer.append(startGameButton);
-      startGameButton.addEventListener("click", function () {
-        shipsMenu(coinWinner);
-      })
+        coin.innerHTML = `${coinWinner} attacks first!`;
+        coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
+        coin.style.color = "#39df57";
+        coin.style.borderRadius = "50%";
+        coin.style.fontSize = "0.65em";
+        coin.style.letterSpacing = "1.5px";
+  
+        let startGameButton = document.createElement("button");
+        
+        startGameButton.classList.add("start-game___button");
+        startGameButton.innerText = "Start game!";
+  
+        preGameContainer.append(startGameButton);
+        startGameButton.addEventListener("click", function () {
+          shipsMenu(coinWinner);
+        });
+      }, 5000);
+      //5000
     }
-  }
-}
-
-
-function oceanOne(event) {
-  if (playerOne.shipsPlaced === false) {
-    alert("Placed")
-  } else {
-
-  }
-}
-
-function oceanTwo(event) {
-  if (playerOne.shipsPlaced === false) {
-    alert("Placed")
-  } else {
-
-  }
+  };
 }
 
 const playerOneContainer = document.querySelector("#player-one");
 const playerTwoContainer = document.querySelector("#player-two");
 const shipsList = document.querySelector(".placing-container");
+const playerNicknameSpan = document.querySelectorAll(".player-nickname");
+
 
 function shipsMenu(winner) {
   preGameContainer.style.display = "none";
-  console.log(`Congrats, ${winner}.`);
-  if (winner === playerOne.nickname) {
+    if (winner === playerOne.nickname) {
+        playerTwoContainer.style.display = "none";
+        playerOneContainer.style.display = "flex";
+        shipsList.style.display = "block";
+        playerOneOcean.classList.add("active-ocean");
 
-    playerTwoContainer.style.display = "none";
-    playerOneContainer.style.display = "flex";
-    shipsList.style.display = "block";
+    } else {
+        playerOneContainer.style.display = "none";
+        playerTwoContainer.style.display = "flex";
+        shipsList.style.display = "block";
+        playerTwoOcean.classList.add("active-ocean");
+    }
+}
 
+const radioButtons = document.shipsForm.ships;
+let selectedShip = null;
+
+for (let i = 0; i < radioButtons.length; i++) {
+  radioButtons[i].onchange = function () {
+      (selectedShip) ? console.log("changed type of ship") : null;
+        if(this !== selectedShip) {
+          selectedShip = this;
+        }
+      selectedShip = this.value;
+  };
+}
+
+function shipOnOceanOne(event) {
+  if (playerOne.shipsPlaced === false) {
+    placeShip("p1", selectedShip);
   } else {
-
-    playerOneContainer.style.display = "none";
-    playerTwoContainer.style.display = "flex";
-    shipsList.style.display = "block";
-
+    showModalError("You have already placed ships, please attack your opponent by selecting one of his cells!");
   }
 }
+
+function shipOnOceanTwo(event) {
+  if (playerOne.shipsPlaced === false) {
+    placeShip("p2", selectedShip);
+  } else {
+    showModalError("You have already placed ships, please attack your opponent by selecting one of his cells!");
+  }
+}
+
+function placeShip(player, ship) {
+  switch (ship) {
+    case "[ ]ship":
+
+    break;
+
+    case "[ ][ ]ship":
+
+    break;
+
+    case "[ ][ ][ ]ship":
+
+    break;
+
+    case "[ ][ ][ ][ ]ship":
+
+    break;
+  }
+}
+
+// showModalError();
+
+function showModalError(text) {
+  let modalErrorContainer = document.createElement("div");
+  modalErrorContainer.classList.add("modal-error");
+  document.body.append(modalErrorContainer);
+
+  let errorTextContainer = document.createElement("div");
+  errorTextContainer.classList.add("error-text___container");
+  modalErrorContainer.append(errorTextContainer);
+
+  let closeError = document.createElement("div");
+  closeError.innerHTML = `<svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-square-fill"
+  fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2
+  2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0
+  0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`;
+  errorTextContainer.append(closeError);
+  closeError.onclick = function() {
+    closeModalError();
+  };
+
+  let errorText = document.createElement("span");
+  errorText.innerHTML = text;
+  errorTextContainer.append(errorText);
+
+  let okButton = document.createElement("button");
+  okButton.innerHTML = "OK";
+  okButton.onclick = function() {
+    closeModalError();
+  };
+  errorTextContainer.append(okButton);
+}
+
+function closeModalError() {
+  let modalError = document.querySelector(".modal-error");
+  modalError.parentNode.removeChild(modalError);
+}
+
+// TODO: TIMER COUNTDOWN AFTER SHIPS PLACED
