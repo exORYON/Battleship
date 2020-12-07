@@ -413,6 +413,7 @@ summary, summary:focus, summary:active {
 .error-text___container button,
 .error-text___container span {
     align-self: center;
+    text-align: center;
 }
 
 .error-text___container button {

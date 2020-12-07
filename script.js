@@ -1,7 +1,6 @@
 "use strict";
 
 let coinWinner;
-let currentPlayer;
 let p1Nickname = sessionStorage.getItem("playerOneNickname");
 let p2Nickname = sessionStorage.getItem("playerTwoNickname");
 
@@ -147,7 +146,6 @@ function preGame() {
         coinWinner = playerTwo.nickname;
       }
 
-      currentPlayer = coinWinner;
       coin.classList.add("spinning");
       
       setTimeout(function() {
@@ -169,7 +167,7 @@ function preGame() {
         startGameButton.addEventListener("click", function () {
           shipsMenu(coinWinner);
         });
-      }, 5000);
+      }, 1000);
       //5000
     }
   };
@@ -226,10 +224,28 @@ function shipOnOceanTwo(event) {
   }
 }
 
-function placeShip(player, ship) {
-  switch (ship) {
-    case "[ ]ship":
+function placeShip(player) {
+  let currentPlayer;
+  let currentShip = selectedShip;
 
+  if (player === "p1") {
+    currentPlayer = playerOne;
+  } else {
+    currentPlayer = playerTwo;
+  }
+
+  console.log(currentPlayer, currentShip);
+
+  switch (currentShip) {
+    case "[ ]ship":
+      if (currentPlayer.shipsLeft[1] > 0) {
+        currentPlayer.shipsLeft[1]--;
+
+        let currentTypeLabel = document.querySelector("#\\[\\ \\]ship-label");
+        currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[1]} Battleship(s) left [ ]`;
+      } else {
+        showModalError("No ships of this type left, try another one!");
+      }
     break;
 
     case "[ ][ ]ship":
@@ -245,8 +261,6 @@ function placeShip(player, ship) {
     break;
   }
 }
-
-// showModalError();
 
 function showModalError(text) {
   let modalErrorContainer = document.createElement("div");
@@ -285,3 +299,4 @@ function closeModalError() {
 }
 
 // TODO: TIMER COUNTDOWN AFTER SHIPS PLACED
+// TODO: PLACE SHIPS H OR V
