@@ -439,3 +439,16 @@ summary, summary:focus, summary:active {
 .error-text___container span {
     font-size: 1.5em;
 }
+
+.direction-container___inner {
+    align-self: flex-start;
+}
+
+.direction-container___inner label:hover {
+    background-color: transparent;
+}
+
+.ship {
+    border: 1px solid black;
+    background-color: rgba(128, 128, 128, 0.60);
+}

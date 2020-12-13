@@ -195,11 +195,13 @@ function shipsMenu(winner) {
     }
 }
 
-const radioButtons = document.shipsForm.ships;
+const shipTypeRadio = document.getElementsByName("shipsType");
+const directionTypeRadio = document.getElementsByName("shipsDirection");
 let selectedShip = null;
+let direction = "horizontal";
 
-for (let i = 0; i < radioButtons.length; i++) {
-  radioButtons[i].onchange = function () {
+for (let i = 0; i < shipTypeRadio.length; i++) {
+  shipTypeRadio[i].onchange = function () {
       (selectedShip) ? console.log("changed type of ship") : null;
         if(this !== selectedShip) {
           selectedShip = this;
@@ -208,7 +210,32 @@ for (let i = 0; i < radioButtons.length; i++) {
   };
 }
 
+for (let i = 0; i < directionTypeRadio.length; i++) {
+  directionTypeRadio[i].onchange = function () {
+      (direction) ? console.log("changed direction of ship") : null;
+        if(this !== direction) {
+          direction = this;
+        }
+      direction = this.value;
+  };
+}
+
 function shipOnOceanOne(event) {
+  let cell = event.target;
+  let cellClassList = cell.classList;
+
+  cellClassList = Array.from(cellClassList);
+
+  let isOcean = cellClassList.indexOf("ocean");
+  let isRow = cellClassList.indexOf("row");
+  let isShip = cellClassList.indexOf("ship");
+
+  if (isOcean === -1 && isRow === -1 && isShip === -1) {
+    cell.classList.add("ship");
+  } else {
+    return;
+  }
+
   if (playerOne.shipsPlaced === false) {
     placeShip("p1", selectedShip);
   } else {
@@ -217,6 +244,21 @@ function shipOnOceanOne(event) {
 }
 
 function shipOnOceanTwo(event) {
+  let cell = event.target;
+  let cellClassList = cell.classList;
+
+  cellClassList = Array.from(cellClassList);
+
+  let isOcean = cellClassList.indexOf("ocean");
+  let isRow = cellClassList.indexOf("row");
+  let isShip = cellClassList.indexOf("ship");
+
+  if (isOcean === -1 && isRow === -1 && isShip === -1) {
+    cell.classList.add("ship");
+  } else {
+    return;
+  }
+
   if (playerOne.shipsPlaced === false) {
     placeShip("p2", selectedShip);
   } else {
@@ -233,8 +275,6 @@ function placeShip(player) {
   } else {
     currentPlayer = playerTwo;
   }
-
-  console.log(currentPlayer, currentShip);
 
   switch (currentShip) {
     case "[ ]ship":
