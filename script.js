@@ -11,6 +11,7 @@ const playerOne = {
   
   shipsPlaced: false,
   shipsLeft: [null,4,3,2,1],
+  // shipsLeft: [null,1,0,0,0],
   
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -19,9 +20,10 @@ const playerOne = {
 
 const playerTwo = {
   nickname: "",
-  
+
   shipsPlaced: false,
   shipsLeft: [null,4,3,2,1],
+  // shipsLeft: [null,1,0,0,0],
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -100,7 +102,7 @@ function setNicknames() {
 }
 
 function showStats() {
-  showModalError("Stats will be aded later!");
+  showModalWindow("Stats will be aded later!");
  // TODO: SHOWSTATS
 }
 
@@ -146,6 +148,8 @@ function preGame() {
         coinWinner = playerTwo.nickname;
       }
 
+      console.log("COIN WINNER IS " + coinWinner);
+
       coin.classList.add("spinning");
       
       setTimeout(function() {
@@ -178,7 +182,6 @@ const playerTwoContainer = document.querySelector("#player-two");
 const shipsList = document.querySelector(".placing-container");
 const playerNicknameSpan = document.querySelectorAll(".player-nickname");
 
-
 function shipsMenu(winner) {
   preGameContainer.style.display = "none";
     if (winner === playerOne.nickname) {
@@ -197,7 +200,8 @@ function shipsMenu(winner) {
 
 const shipTypeRadio = document.getElementsByName("shipsType");
 const directionTypeRadio = document.getElementsByName("shipsDirection");
-let selectedShip = null;
+
+let selectedShip = "[ ]ship";
 let direction = "horizontal";
 
 for (let i = 0; i < shipTypeRadio.length; i++) {
@@ -221,30 +225,21 @@ for (let i = 0; i < directionTypeRadio.length; i++) {
 }
 
 function shipOnOceanOne(event) {
-  let cell = event.target;
-  let cellClassList = cell.classList;
-
-  cellClassList = Array.from(cellClassList);
-
-  let isOcean = cellClassList.indexOf("ocean");
-  let isRow = cellClassList.indexOf("row");
-  let isShip = cellClassList.indexOf("ship");
-
-  if (isOcean === -1 && isRow === -1 && isShip === -1) {
-    cell.classList.add("ship");
-  } else {
-    return;
-  }
-
-  if (playerOne.shipsPlaced === false) {
-    placeShip("p1", selectedShip);
-  } else {
-    showModalError("You have already placed ships, please attack your opponent by selecting one of his cells!");
-  }
+  if (clickWasOnCell(event)) {
+    let cell = event.target;
+      placeShip("p1", cell);
+  } 
 }
 
 function shipOnOceanTwo(event) {
-  let cell = event.target;
+  if (clickWasOnCell(event)) {
+    let cell = event.target;
+      placeShip("p2", cell);
+  } 
+}
+
+function clickWasOnCell(element) {
+  let cell = element.target;
   let cellClassList = cell.classList;
 
   cellClassList = Array.from(cellClassList);
@@ -254,55 +249,121 @@ function shipOnOceanTwo(event) {
   let isShip = cellClassList.indexOf("ship");
 
   if (isOcean === -1 && isRow === -1 && isShip === -1) {
-    cell.classList.add("ship");
+    return true;
   } else {
-    return;
-  }
-
-  if (playerOne.shipsPlaced === false) {
-    placeShip("p2", selectedShip);
-  } else {
-    showModalError("You have already placed ships, please attack your opponent by selecting one of his cells!");
+    return false;
   }
 }
 
-function placeShip(player) {
-  let currentPlayer;
+let currentPlayer;
+function placeShip(player, cell) {
   let currentShip = selectedShip;
+    if (player === "p1") {
+      currentPlayer = playerOne;
+    } else {
+      currentPlayer = playerTwo;
+    }
 
-  if (player === "p1") {
-    currentPlayer = playerOne;
+  console.log("SHIPS PLACING | CURRENT PLAYER IS " + currentPlayer.nickname);
+
+  if (leftShips(currentPlayer)) {
+    switch (currentShip) {
+      case "[ ]ship":
+        if (currentPlayer.shipsLeft[1] > 0) {
+          currentPlayer.shipsLeft[1]--;
+          cell.classList.add("ship");
+
+          let currentTypeLabel = document.querySelector("#\\[\\ \\]ship-label");
+          currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[1]} Battleship(s) left [ ]`;
+        } else {
+          showModalWindow("No ships of this type left, try another one!");
+        }
+      break;
+
+      case "[ ][ ]ship":
+        if (currentPlayer.shipsLeft[2] > 0) {
+          currentPlayer.shipsLeft[2]--;
+          cell.classList.add("ship");
+
+          let currentTypeLabel = document.querySelector("#\\[\\ \\]\\[\\ \\]ship-label");
+          currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[2]} Battleship(s) left [ ][ ]`;
+        } else {
+          showModalWindow("No ships of this type left, try another one!");
+        }
+      break;
+
+      case "[ ][ ][ ]ship":
+        if (currentPlayer.shipsLeft[3] > 0) {
+          currentPlayer.shipsLeft[3]--;
+          cell.classList.add("ship");
+
+          let currentTypeLabel = document.querySelector("#\\[\\ \\]\\[\\ \\]\\[\\ \\]ship-label");
+          currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[3]} Battleship(s) left [ ][ ][ ]`;
+        } else {
+          showModalWindow("No ships of this type left, try another one!");
+        }
+      break;
+
+      case "[ ][ ][ ][ ]ship":
+        if (currentPlayer.shipsLeft[4] > 0) {
+          currentPlayer.shipsLeft[4]--;
+          cell.classList.add("ship");
+
+          let currentTypeLabel = document.querySelector("#\\[\\ \\]\\[\\ \\]\\[\\ \\]\\[\\ \\]ship-label");
+          currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[4]} Battleship(s) left [ ][ ][ ][ ]`;
+        } else {
+          showModalWindow("No ships of this type left, try another one!");
+        }
+      break;
+    }
   } else {
-    currentPlayer = playerTwo;
-  }
+    console.log("BEFORE NEXT TURN | CURRENT PLAYER IS " + currentPlayer.nickname);
+    nextTurn(currentPlayer);
+    console.log("AFTER NEXT TURN | CURRENT PLAYER IS " + currentPlayer.nickname);
 
-  switch (currentShip) {
-    case "[ ]ship":
-      if (currentPlayer.shipsLeft[1] > 0) {
-        currentPlayer.shipsLeft[1]--;
-
-        let currentTypeLabel = document.querySelector("#\\[\\ \\]ship-label");
-        currentTypeLabel.innerHTML = `${currentPlayer.shipsLeft[1]} Battleship(s) left [ ]`;
-      } else {
-        showModalError("No ships of this type left, try another one!");
-      }
-    break;
-
-    case "[ ][ ]ship":
-
-    break;
-
-    case "[ ][ ][ ]ship":
-
-    break;
-
-    case "[ ][ ][ ][ ]ship":
-
-    break;
+    showModalWindow("<small>You have placed all the ships. Give control to the second player and press OK.</small>");
   }
 }
 
-function showModalError(text) {
+function leftShips(player) {
+  let sum = player.shipsLeft[1] + player.shipsLeft[2] + player.shipsLeft[3] + player.shipsLeft[4];
+
+  if (sum !== 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+let shipsHidden = false;
+
+function nextTurn(player) {
+  let hideContainer = document.createElement("div");
+  hideContainer.classList.add("hidden");
+  document.body.append(hideContainer);
+  shipsHidden = true;
+  console.log(player);
+
+  if (player.nickname === playerOne.nickname) {
+    playerOneContainer.style.display = "none";
+      if(player.shipsPlaced === false) {
+        player.shipsPlaced = true;
+      }
+    currentPlayer = playerTwo
+    playerTwoContainer.style.display = "flex";
+  }
+  
+  else {
+    playerTwoContainer.style.display = "none";
+      if(player.shipsPlaced === false) {
+        player.shipsPlaced = true;
+      }
+    currentPlayer = playerOne;
+    playerOneContainer.style.display = "flex";
+  }
+}
+
+function showModalWindow(text) {
   let modalErrorContainer = document.createElement("div");
   modalErrorContainer.classList.add("modal-error");
   document.body.append(modalErrorContainer);
@@ -316,9 +377,10 @@ function showModalError(text) {
   fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2
   2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0
   0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`;
+ 
   errorTextContainer.append(closeError);
   closeError.onclick = function() {
-    closeModalError();
+    closeModalWindow();
   };
 
   let errorText = document.createElement("span");
@@ -326,17 +388,27 @@ function showModalError(text) {
   errorTextContainer.append(errorText);
 
   let okButton = document.createElement("button");
+  okButton.classList.add("ok-button");
   okButton.innerHTML = "OK";
   okButton.onclick = function() {
-    closeModalError();
+    closeModalWindow();
   };
+
   errorTextContainer.append(okButton);
 }
 
-function closeModalError() {
+function closeModalWindow() {
   let modalError = document.querySelector(".modal-error");
+  
+  if (shipsHidden === true) {
+    document.querySelector(".hidden").style.display = "none";  
+    shipsHidden = false;
+  }
+
   modalError.parentNode.removeChild(modalError);
 }
 
 // TODO: TIMER COUNTDOWN AFTER SHIPS PLACED
 // TODO: PLACE SHIPS H OR V
+// TODO: CHOOSE YOUR COLOR
+// TODO: CHANGING SHIPS AND OCEAN CONTAINER COLOR
