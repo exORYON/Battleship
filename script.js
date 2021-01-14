@@ -1,6 +1,6 @@
 "use strict";
 
-let coinWinner;
+let coinWinner, actualOcean;
 let p1Nickname = sessionStorage.getItem("playerOneNickname");
 let p2Nickname = sessionStorage.getItem("playerTwoNickname");
 
@@ -10,8 +10,9 @@ const playerOne = {
   nickname: "",
   
   shipsPlaced: false,
-  shipsLeft: [null,4,3,2,1],
-  
+  // shipsLeft: [null,4,3,2,1],
+  shipsLeft: [null,0,0,0,1],
+
   shotsTotal: 0,
   shotsInGoal: 0,
   shotsMissed: 0,
@@ -21,7 +22,8 @@ const playerTwo = {
   nickname: "",
 
   shipsPlaced: false,
-  shipsLeft: [null,4,3,2,1],
+  // shipsLeft: [null,4,3,2,1],
+  shipsLeft: [null,0,0,0,1],
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -108,8 +110,30 @@ const preGameContainer = document.querySelector(".pre-game___container");
 const playerOneOcean = document.querySelector("#ocean-one");
 const playerTwoOcean = document.querySelector("#ocean-two");
 
-playerOneOcean.addEventListener('click',e => shipOnOceanOne(e))
-playerTwoOcean.addEventListener('click',e => shipOnOceanTwo(e))
+let shipOnOceanOne = function (event) {
+  if (clickWasOnCell(event)) {
+    let cell = event.target;
+    chooseSell("p1", cell);
+  } 
+}
+
+let shipOnOceanTwo = function (event) {
+  if (clickWasOnCell(event)) {
+    let cell = event.target;
+    chooseSell("p2", cell);
+  } 
+}
+
+let oceanOneListener = function(event) {
+  shipOnOceanOne(event);
+}
+
+let oceanTwoListener = function(event) {
+  shipOnOceanTwo(event);
+}
+
+playerOneOcean.addEventListener('click', oceanOneListener);
+playerTwoOcean.addEventListener('click', oceanTwoListener);
 
 function nicknameError(text) {
   let error = document.createElement('div');
@@ -145,8 +169,6 @@ function preGame() {
       } else {
         coinWinner = playerTwo.nickname;
       }
-
-      console.log("COIN WINNER IS " + coinWinner);
 
       coin.classList.add("spinning");
       
@@ -222,19 +244,7 @@ for (let i = 0; i < directionTypeRadio.length; i++) {
   };
 }
 
-function shipOnOceanOne(event) {
-  if (clickWasOnCell(event)) {
-    let cell = event.target;
-      chooseSell("p1", cell);
-  } 
-}
 
-function shipOnOceanTwo(event) {
-  if (clickWasOnCell(event)) {
-    let cell = event.target;
-      chooseSell("p2", cell);
-  } 
-}
 
 function clickWasOnCell(element) {
   let cell = element.target;
@@ -264,7 +274,7 @@ function chooseSell(player, cell) {
       currentPlayer = playerTwo;
     }
 
-  console.log("CELL COOSING | CURRENT PLAYER IS " + currentPlayer.nickname);
+  
 
   if (checkIfShipsLeft(currentPlayer)) {
     switch (currentShip) {
@@ -305,145 +315,274 @@ function chooseSell(player, cell) {
       break;
     }
   } else {
-    console.log("BEFORE NEXT TURN | CURRENT PLAYER IS " + currentPlayer.nickname);
     nextTurn(currentPlayer);
-    console.log("AFTER NEXT TURN | CURRENT PLAYER IS " + currentPlayer.nickname);
-
-    showModalWindow("<small>You have placed all the ships. Give control to the second player and press OK.</small>");
+    showModalWindow("<small>You have placed all the ships. Give control to another player and press OK.</small>");
   }
 }
 
 function placeShip(ship, cell) {
-  let cls = cell.classList;
-  cls = cls[1];
-  cls = cls.split("-");
-  cls.shift();
+  let cellClassList = cell.classList;
+  cellClassList = cellClassList[1];
+  cellClassList = cellClassList.split("-");
+  cellClassList.shift();
 
   switch (ship) {
     case "sq1":
-        if (cellIsAvailable()) {
-          currentPlayer.shipsLeft[1]--;
-          cell.classList.add("ship");
+        if (cellIsAvailable(1,direction)) {
         } else {
-          showModalWindow("Can`t place ship there!");
+          showModalWindow("Can`t place this ship there!");
         }
       break;
     case "sq2":
-      if (cellIsAvailable()) {
-        currentPlayer.shipsLeft[2]--;
-        cell.classList.add("ship");
+      if (cellIsAvailable(2,direction)) {
       } else {
-        showModalWindow("Can`t place ship there!");
+        showModalWindow("Can`t place this ship there!");
       }
       break;
     case "sq3":
-      if (cellIsAvailable()) {
-        currentPlayer.shipsLeft[3]--;
-        cell.classList.add("ship");
+      if (cellIsAvailable(3,direction)) {
       } else {
-        showModalWindow("Can`t place ship there!");
+        showModalWindow("Can`t place this ship there!");
       }
       break;
     case "sq4":
-      if (cellIsAvailable()) {
-        currentPlayer.shipsLeft[4]--;
-        cell.classList.add("ship");
+      if (cellIsAvailable(4,direction)) {
       } else {
-        showModalWindow("Can`t place ship there!");
+        showModalWindow("Can`t place this ship there!");
       }
       break;
     default: alert("Something went wrong...");
   }
 
-  function cellIsAvailable() {
+  function cellIsAvailable(cells, direction) {
     let currentOcean;
-      currentPlayer === playerOne ? currentOcean = "ocean-one"
-                                  : currentOcean = "ocean-two";
-
-    let availableAbove = false, availableBelow = false,
-        availableLeft = false, availableRight = false;
+    currentPlayer === playerOne ? currentOcean = "ocean-one" : currentOcean = "ocean-two";
     
-    let row = +cls[0];
-    let column = +cls[1];
+    let row = +cellClassList[0];
+    let column = +cellClassList[1];
+    let cellsToCheck = [];
 
-    if (row === 1) {
-      availableAbove = true;
-    }
-    if (row === 10) {
-      availableBelow = true;
-    }
-    if (column === 1) {
-      availableLeft = true;
-    }
-    if (column === 10) {
-      availableRight = true;
-    }
-
-    if (!availableAbove) {
-      var cellAbove = document.querySelector(`#${currentOcean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
-        if (!cellAbove.classList.contains("ship")) {
-          availableAbove = true;
-        } else {
-          return;
-        }
-    }
-
-    if (!availableBelow) {
-      var cellBelow = document.querySelector(`#${currentOcean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
-        if (!cellBelow.classList.contains("ship")) {
-          availableBelow = true;
-        } else {
-          return;
-        }
-    }
-
-    if (!availableLeft) {
-      var cellLeft = document.querySelector(`#${currentOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
-        if (!cellLeft.classList.contains("ship")) {
-          availableLeft = true;
-        } else {
-          return;
-        }
-    }
-
-    if (!availableRight) {
-      var cellRight =  document.querySelector(`#${currentOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+1}`);
-        if (!cellRight.classList.contains("ship")) {
-          availableRight = true;
-        } else {
-          return;
-        }
-    }
-
-    console.log(availableAbove, availableBelow, availableLeft, availableRight);
-    if (availableAbove && availableBelow && availableLeft && availableRight) {
-      if (row > 0 && row < 10) {
-        cellBelow.classList.add("busy");
+    for (let i = 0; i < cells; i++) {
+      if (direction === "horizontal") {
+        var currentCell = document.querySelector(`#${currentOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+i}`);
+      } else {
+        var currentCell = document.querySelector(`#${currentOcean} > div:nth-child(${row+i}) > div.cell.cell-${row+i}-${column}`);
       }
+
+      if(currentCell === null) {
+        return false;
+      } else {
+        cellsToCheck.push(currentCell);
+      }
+    }
+
+  let allCellsAreAvailable = true;
+    for(let i of cellsToCheck) {
+      let availableAbove = false, availableBelow = false,
+          availableLeft = false, availableRight = false,
+          availableTopLeft = false, availableTopRight = false,
+          availableBottomLeft = false, availableBottomRight = false;
+
+      var cellAbove = false,  cellBelow = false,
+          cellLeft = false,  cellRight = false,
+          cellTopLeft = false,  cellTopRight = false,
+          cellBottomLeft = false,  cellBottomRight = false;
+
+      let cellClassList = i.classList;
+          cellClassList = cellClassList[1];
+          cellClassList = cellClassList.split("-");
+          cellClassList.shift();
       
-      if (row > 1 && row <= 10) {
-        cellAbove.classList.add("busy");
-      }
+      let row = +cellClassList[0];
+      let column = +cellClassList[1];
 
-      if (column > 1 && column <= 10) {
-        cellLeft.classList.add("busy");
-      }
+      console.table("ROW", "COLUMN", row, column);
 
-      if (column > 0 && column < 10) {
-        cellRight.classList.add("busy");
+        if (row === 1) {
+          availableAbove = true;
+          availableTopLeft = true;
+          availableTopRight = true;
+        }
+        if (row === 10) {
+          availableBelow = true;
+          availableBottomLeft = true;
+          availableBottomRight = true;
+        }
+        if (column === 1) {
+          availableLeft = true;
+          availableTopLeft = true;
+          availableBottomLeft = true;
+        }
+        if (column === 10) {
+          availableRight = true;
+          availableTopRight = true;
+          availableBottomRight = true;
+        }
+
+        if (!availableAbove) {
+          cellAbove = document.querySelector(`#${currentOcean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
+            if (!cellAbove.classList.contains("ship")) {
+              availableAbove = true;
+            }
+        }
+        if (!availableBelow) {
+          cellBelow = document.querySelector(`#${currentOcean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
+            if (!cellBelow.classList.contains("ship")) {
+              availableBelow = true;
+            }
+        }
+        if (!availableLeft) {
+          cellLeft = document.querySelector(`#${currentOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
+            if (!cellLeft.classList.contains("ship")) {
+              availableLeft = true;
+            }
+        }
+    
+        if (!availableRight) {
+          cellRight =  document.querySelector(`#${currentOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+1}`);
+            if (!cellRight.classList.contains("ship")) {
+              availableRight = true;
+            }
+        }
+
+        if (row === 1 && column === 1) {
+          availableTopLeft = true;
+          availableBottomLeft = true;
+          availableTopRight = true;
+        }
+        if (row === 1 && column === 10) {
+          availableTopRight = true;
+          availableTopLeft = true;
+          availableBottomRight = true;
+        }
+        if (row === 10 && column === 1) {
+          availableTopLeft = true;
+          availableBottomLeft = true;
+          availableBottomRight = true;
+        }
+        if (row === 10 && column === 10) {
+          availableTopRight = true;
+          availableBottomLeft = true;
+          availableBottomRight = true;
+        }
+
+        if (!availableTopLeft) {
+          cellTopLeft = document.querySelector(`#${currentOcean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column-1}`);
+            if (!cellTopLeft.classList.contains("ship")) {
+              availableTopLeft = true;
+            }
+        }
+
+        if (!availableTopRight) {
+          cellTopRight = document.querySelector(`#${currentOcean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column+1}`);
+            if (!cellTopRight.classList.contains("ship")) {
+              availableTopRight = true;
+            }
+        }
+
+        if (!availableBottomLeft) {
+          cellBottomLeft = document.querySelector(`#${currentOcean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column-1}`);
+            if (!cellBottomLeft.classList.contains("ship")) {
+              availableBottomLeft = true;
+            }
+        }
+
+        if (!availableBottomRight) {
+          cellBottomRight = document.querySelector(`#${currentOcean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column+1}`);
+            if (!cellBottomRight.classList.contains("ship")) {
+              availableBottomRight = true;
+            }
+        }
+
+      let available = availableAbove && availableBelow && availableLeft && availableRight &&
+                      availableTopLeft && availableTopRight && availableBottomLeft && availableBottomRight;
+
+      if (!available) {
+        allCellsAreAvailable = false;
       }
-      // TODO: ADD DIAGONAL BUSY CLASS FOR CELLS
-      return true;
-    } else {
-      return false;
     }
+
+    actualOcean = currentOcean;
+
+      if (allCellsAreAvailable) {
+        for (let i of cellsToCheck) {
+          i.classList.add("ship");
+        }
+
+        markBusyCells(cellsToCheck, currentOcean);
+        currentPlayer.shipsLeft[cells]--;
+        if (!checkIfShipsLeft(playerOne) && !checkIfShipsLeft(playerTwo)) {
+          
+          setTimeout(function () {
+            showModalWindow("<small>ALL SHIPS ARE PLACED! BATTLE BEGINS! Give control to another player and press OK.</small>");
+            nextTurn(currentPlayer);
+            beginBattle();
+          }, 1000);
+        } else if (!checkIfShipsLeft(currentPlayer)) {
+         
+
+          setTimeout(function () {
+            showModalWindow("<small>You have placed all ships. Give control to another player and press OK.</small>");
+            nextTurn(currentPlayer);
+          }, 1000);
+        }
+        return true;
+      }
+
+    return false;
+  }
+}
+
+function markBusyCells(cells, ocean) {
+  for (let cell of cells) {
+    let cellClassList = cell.classList;
+    cellClassList = cellClassList[1];
+    cellClassList = cellClassList.split("-");
+    cellClassList.shift();
+
+    let row = +cellClassList[0];
+    let column = +cellClassList[1];
+
+    let cellAbove = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
+    let cellBelow = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
+    let cellLeft = document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
+    let cellRight =  document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+1}`);
+    let cellTopLeft = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column-1}`);
+    let cellTopRight = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column+1}`);
+    let cellBottomLeft = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column-1}`);
+    let cellBottomRight = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column+1}`);
+
+    if (cellAbove !== null) {
+      cellAbove.classList.add("busy");
+    }
+    if (cellLeft !== null) {
+      cellLeft .classList.add("busy");
+    } 
+    if (cellRight !== null) {
+      cellRight.classList.add("busy");
+    } 
+    if (cellBelow !== null) {
+      cellBelow.classList.add("busy");
+    } 
+    if (cellTopRight !== null) {
+      cellTopRight.classList.add("busy");
+    } 
+    if (cellTopLeft !== null) {
+      cellTopLeft.classList.add("busy");
+    } 
+    if (cellBottomRight !== null) {
+      cellBottomRight.classList.add("busy");
+    } 
+    if (cellBottomLeft !== null) {
+      cellBottomLeft.classList.add("busy");
+    } 
   }
 }
 
 function checkIfShipsLeft(player) {
-  let sum = player.shipsLeft[1] + player.shipsLeft[2] + player.shipsLeft[3] + player.shipsLeft[4];
+  let totalShips = player.shipsLeft[1] + player.shipsLeft[2] + player.shipsLeft[3] + player.shipsLeft[4];
 
-  if (sum !== 0) {
+  if (totalShips > 0) {
     return true;
   } else {
     return false;
@@ -457,7 +596,6 @@ function nextTurn(player) {
   hideContainer.classList.add("hidden");
   document.body.append(hideContainer);
   shipsHidden = true;
-  console.log(player);
 
   if (player.nickname === playerOne.nickname) {
     playerOneContainer.style.display = "none";
@@ -539,7 +677,55 @@ function closeModalWindow() {
   modalError.parentNode.removeChild(modalError);
 }
 
+const playerOneShootingOcean = document.getElementById("shooting-ocean-one");
+const playerTwoShootingOcean = document.getElementById("shooting-ocean-two");
+
+let shootingListener = function(event) {
+  attackCell(event.target);
+}
+
+function beginBattle() {
+  playerOneOcean.removeEventListener("click", oceanOneListener);
+  playerTwoOcean.removeEventListener("click", oceanTwoListener);
+
+  playerOneOcean.classList.remove("active-ocean");
+  playerTwoOcean.classList.remove("active-ocean");
+
+  playerOneShootingOcean.addEventListener("click", shootingListener);
+  playerTwoShootingOcean.addEventListener("click", shootingListener);
+
+  playerOneShootingOcean.classList.add("active-ocean");
+  playerTwoShootingOcean.classList.add("active-ocean");
+  
+  shipsList.style.display = "none";
+}
+
+function attackCell(cell) {
+  let cellClassList = cell.classList;
+  cellClassList = cellClassList[1];
+  cellClassList = cellClassList.split("-");
+  cellClassList.shift();
+
+  let row = +cellClassList[0];
+  let column = +cellClassList[1];
+
+  console.log("SHOT ON " + row + " " + column);
+  console.log(actualOcean);
+
+  let currentShootingOcean = null;
+  if (actualOcean === "ocean-one") {
+    currentShootingOcean = "shooting-ocean-two";
+  } else {
+    currentShootingOcean = "shooting-ocean-one";
+  }
+
+  let attackedCell = document.querySelector(`#${currentShootingOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column}`);
+  attackedCell.classList.add("boom");
+  console.log(attackedCell);
+}
+
 // TODO: TIMER COUNTDOWN AFTER SHIPS PLACED
-// TODO: PLACE SHIPS H OR V
 // TODO: CHOOSE YOUR COLOR
 // TODO: CHANGING SHIPS AND OCEAN CONTAINER COLOR
+
+

@@ -37,6 +37,10 @@ body {
     height: 90%;
 }
 
+.busy {
+    background-color: rgba(255, 0, 0, 0.473);
+}
+
 .menu {
     position: relative;
     background-color: #48cae4;
@@ -462,6 +466,11 @@ summary, summary:focus, summary:active {
     background-color: rgb(0, 0, 0);
 }
 
-.busy {
-    background-color: rgba(255, 0, 0, 0.473);
+.modal-error {
+    background-color: rgb(8, 8, 8);
+}
+
+.boom {
+    background-color: rgb(0, 0, 0);
+    border: 1px solid black;
 }
