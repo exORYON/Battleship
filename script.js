@@ -1,4 +1,5 @@
 "use strict";
+console.log("v1.01");
 
 let coinWinner, actualOcean;
 let p1Nickname, p2Nickname;
@@ -256,8 +257,6 @@ for (let i = 0; i < directionTypeRadio.length; i++) {
   };
 }
 
-
-
 function clickWasOnCell(element) {
   let cell = element.target;
   let cellClassList = cell.classList;
@@ -285,8 +284,6 @@ function chooseSell(player, cell) {
     } else {
       currentPlayer = playerTwo;
     }
-
-  
 
   if (checkIfShipsLeft(currentPlayer)) {
     switch (currentShip) {
@@ -584,28 +581,28 @@ function markBusyCells(cells, ocean, alreadyMarked = false) {
     }
 
     else {
-      if (cellAbove !== null && !cellAbove.classList.contains("ship")) {
+      if (cellAbove !== null && !cellAbove.classList.contains("ship" && !cellAbove.classList.contains("damaged-ship"))) {
         cellAbove.classList.add("busy");
       }
-      if (cellLeft !== null && !cellLeft.classList.contains("ship")) {
+      if (cellLeft !== null && !cellLeft.classList.contains("ship") && !cellLeft.classList.contains("damaged-ship")) {
         cellLeft.classList.add("busy");
       } 
-      if (cellRight !== null && !cellRight.classList.contains("ship")) {
+      if (cellRight !== null && !cellRight.classList.contains("ship") && !cellRight.classList.contains("damaged-ship")) {
         cellRight.classList.add("busy");
       } 
-      if (cellBelow !== null && !cellBelow.classList.contains("ship")) {
+      if (cellBelow !== null && !cellBelow.classList.contains("ship") && !cellBelow.classList.contains("damaged-ship")) {
         cellBelow.classList.add("busy");
       } 
-      if (cellTopRight !== null && !cellTopRight.classList.contains("ship")) {
+      if (cellTopRight !== null && !cellTopRight.classList.contains("ship") && !cellTopRight.classList.contains("damaged-ship")) {
         cellTopRight.classList.add("busy");
       } 
-      if (cellTopLeft !== null && !cellTopLeft.classList.contains("ship")) {
+      if (cellTopLeft !== null && !cellTopLeft.classList.contains("ship") && !cellTopLeft.classList.contains("damaged-ship")) {
         cellTopLeft.classList.add("busy");
       } 
-      if (cellBottomRight !== null && !cellBottomRight.classList.contains("ship")) {
+      if (cellBottomRight !== null && !cellBottomRight.classList.contains("ship") && !cellBottomRight.classList.contains("damaged-ship")) {
         cellBottomRight.classList.add("busy");
       } 
-      if (cellBottomLeft !== null && !cellBottomLeft.classList.contains("ship")) {
+      if (cellBottomLeft !== null && !cellBottomLeft.classList.contains("ship") && !cellBottomLeft.classList.contains("damaged-ship")) {
         cellBottomLeft.classList.add("busy");
       } 
     }
@@ -787,7 +784,10 @@ function attackCell(cell) {
   let sameCellOnEnemiesOcean = document.querySelector(`#${opponentsOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column}`);
   let sameCellClassList = Array.from(sameCellOnEnemiesOcean.classList);
 
-  if (sameCellClassList.indexOf("ship") !== -1) {
+  let opponent = currentPlayer.nickname === playerOne.nickname ? playerTwo : playerOne;
+  opponent.totalShipsLeft--;
+
+  if (sameCellClassList.includes("ship")) {
     let typeOfDamagedShip = sameCellClassList.includes("1-sq") ? "1-sq" :
                             sameCellClassList.includes("2-sq") ? "2-sq" :
                             sameCellClassList.includes("3-sq") ? "3-sq": "4-sq";
@@ -797,17 +797,29 @@ function attackCell(cell) {
 
     cell.classList.add("damaged-ship");
 
-    markDamagedShip(cell, currentShootingOcean, typeOfDamagedShip);
-    markDamagedShip(cell, opponentsOcean, typeOfDamagedShip);
+    let shipsNearLeft = false;
+    let cellsAroundCurrentCell = getCellsAround(cell, opponentsOcean);
+   
+    for (let each of cellsAroundCurrentCell) {
+      if (each === null) {
+        continue;
+      }
 
-    let opponent = currentPlayer.nickname === playerOne.nickname ? playerTwo : playerOne;
-    opponent.totalShipsLeft--;
-
-    if (typeOfDamagedShip !== "1-sq") {
-      cellsToMark.push(cell);
+      if (each.classList.contains("ship")) {
+        shipsNearLeft = true;
+      }
     }
 
+    if (shipsNearLeft) {
+      markCornerCells(cell, opponentsOcean);
+      markCornerCells(cell, currentShootingOcean);
+    } else {
+      markCellsAround(cell, opponentsOcean);
+      markCellsAround(cell, currentShootingOcean);
+    }
+  
     let totalShipsAround = howManyShipsAround(cell, opponentsOcean);
+    
     let markedShips = document.querySelectorAll(".marked");
 
     for (let each of markedShips) {
@@ -815,8 +827,8 @@ function attackCell(cell) {
     }
 
     if (totalShipsAround === 0) {
-      markBusyCells(cellsToMark, currentShootingOcean, true);
-      markBusyCells(cellsToMark, opponentsOcean, true);
+      markCellsAroundDestroyedShip(cell, opponentsOcean);
+      markCellsAroundDestroyedShip(cell, currentShootingOcean);
       cellsToMark = [];
     };
 
@@ -833,6 +845,7 @@ function attackCell(cell) {
   }
 
   else {
+    cellsToMark = [];
     nextTurnButton.disabled = false;
 
     sameCellOnEnemiesOcean.classList.add("missed-shot");
@@ -841,6 +854,38 @@ function attackCell(cell) {
 
     playerOneShootingOcean.removeEventListener("click", shootingListener);
     playerTwoShootingOcean.removeEventListener("click", shootingListener);
+  }
+}
+
+function markCornerCells(cell, ocean) {
+  let cellClassList = cell.classList;
+  cellClassList = cellClassList[1];
+  cellClassList = cellClassList.split("-");
+  cellClassList.shift();
+
+  let row = +cellClassList[0];
+  let column = +cellClassList[1];
+
+  let cellTopLeft = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column-1}`);
+  let cellTopRight = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column+1}`);
+  let cellBottomLeft = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column-1}`);
+  let cellBottomRight = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column+1}`);
+
+  if (cellTopRight !== null && !cellTopRight.classList.contains("ship") && !cellTopRight.classList.contains("damaged-ship")) {
+    cellTopRight.classList.add("missed-shot");
+    cellTopRight.classList.add("busy");
+  } 
+  if (cellTopLeft !== null && !cellTopLeft.classList.contains("ship") && !cellTopLeft.classList.contains("damaged-ship")) {
+    cellTopLeft.classList.add("missed-shot");
+    cellTopLeft.classList.add("busy");
+  } 
+  if (cellBottomRight !== null && !cellBottomRight.classList.contains("ship") && !cellBottomRight.classList.contains("damaged-ship")) {
+    cellBottomRight.classList.add("missed-shot");
+    cellBottomRight.classList.add("busy");
+  } 
+  if (cellBottomLeft !== null && !cellBottomLeft.classList.contains("ship") && !cellBottomLeft.classList.contains("damaged-ship")) {
+    cellBottomLeft.classList.add("missed-shot");
+    cellBottomLeft.classList.add("busy");
   }
 }
 
@@ -884,7 +929,7 @@ function getCellsAround(cell, ocean) {
   return [cellAbove, cellBelow, cellLeft, cellRight];
 }
 
-function markDamagedShip(cell, ocean, shipType) {
+function markCellsAround(cell, ocean) {
   let cellClassList = cell.classList;
     cellClassList = cellClassList[1];
     cellClassList = cellClassList.split("-");
@@ -898,46 +943,58 @@ function markDamagedShip(cell, ocean, shipType) {
     let cellBottomLeft = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column-1}`);
     let cellBottomRight = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column+1}`);
 
-    if (cellTopRight !== null) {
+    if (cellTopRight !== null && !cellTopRight.classList.contains("ship") && !cellTopRight.classList.contains("damaged-ship")) {
       cellTopRight.classList.add("missed-shot");
       cellTopRight.classList.add("busy");
     } 
-    if (cellTopLeft !== null) {
+    if (cellTopLeft !== null && !cellTopLeft.classList.contains("ship") && !cellTopLeft.classList.contains("damaged-ship")) {
       cellTopLeft.classList.add("missed-shot");
       cellTopLeft.classList.add("busy");
     } 
-    if (cellBottomRight !== null) {
+    if (cellBottomRight !== null && !cellBottomRight.classList.contains("ship") && !cellBottomRight.classList.contains("damaged-ship")) {
       cellBottomRight.classList.add("missed-shot");
       cellBottomRight.classList.add("busy");
     } 
-    if (cellBottomLeft !== null) {
+    if (cellBottomLeft !== null && !cellBottomLeft.classList.contains("ship") && !cellBottomLeft.classList.contains("damaged-ship")) {
       cellBottomLeft.classList.add("missed-shot");
       cellBottomLeft.classList.add("busy");
     }
 
-    if (shipType === "1-sq") {
-      let cellAbove = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
-      let cellBelow = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
-      let cellLeft = document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
-      let cellRight =  document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+1}`);
+    let cellAbove = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
+    let cellBelow = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
+    let cellLeft = document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
+    let cellRight =  document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column+1}`);
 
-      if (cellAbove !== null) {
-        cellAbove.classList.add("missed-shot");
-        cellAbove.classList.add("busy");
-      }
-      if (cellLeft !== null) {
-        cellLeft.classList.add("missed-shot");
-        cellLeft.classList.add("busy");
-      } 
-      if (cellRight !== null) {
-        cellRight.classList.add("missed-shot");
-        cellRight.classList.add("busy");
-      } 
-      if (cellBelow !== null) {
-        cellBelow.classList.add("missed-shot");
-        cellBelow.classList.add("busy");
-      } 
+    if (cellAbove !== null && !cellAbove.classList.contains("ship") && !cellAbove.classList.contains("damaged-ship")) {
+      cellAbove.classList.add("missed-shot");
+      cellAbove.classList.add("busy");
     }
+    if (cellLeft !== null && !cellLeft.classList.contains("ship") && !cellLeft.classList.contains("damaged-ship")) {
+      cellLeft.classList.add("missed-shot");
+      cellLeft.classList.add("busy");
+    } 
+    if (cellRight !== null && !cellRight.classList.contains("ship") && !cellRight.classList.contains("damaged-ship")) {
+      cellRight.classList.add("missed-shot");
+      cellRight.classList.add("busy");
+    } 
+    if (cellBelow !== null && !cellBelow.classList.contains("ship") && !cellBelow.classList.contains("damaged-ship")) {
+      cellBelow.classList.add("missed-shot");
+      cellBelow.classList.add("busy");
+    } 
+}
+
+function markCellsAroundDestroyedShip(cell, ocean) {
+  markCellsAround(cell, ocean);
+  let cellsAround = getCellsAround(cell, ocean);
+
+  for (let each of cellsAround) {
+    if (each !== null) {
+      if (each.classList.contains("damaged-ship") && !each.classList.contains("marked")) {
+        each.classList.add("marked");
+        markCellsAroundDestroyedShip(each, ocean);
+      }
+    }
+  }
 }
 
 function checkForWin(opponentPlayer) {
@@ -974,7 +1031,7 @@ function fillEmptyCells(ocean) {
   let cells = document.querySelectorAll(`#${ocean} .cell`);
   cells = Array.from(cells);
 
-  let emptyCells = cells.filter(el => {
+  cells.filter(el => {
     let cls = Array.from(el.classList);
 
     if (!cls.includes("ship") && !cls.includes("busy")) {
