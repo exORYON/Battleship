@@ -1,8 +1,7 @@
 "use strict";
 
 let coinWinner, actualOcean;
-let p1Nickname = sessionStorage.getItem("playerOneNickname");
-let p2Nickname = sessionStorage.getItem("playerTwoNickname");
+let p1Nickname, p2Nickname;
 
 const changeNicknameForm = document.querySelector(".roulette");
 
@@ -10,8 +9,12 @@ const playerOne = {
   nickname: "",
   
   shipsPlaced: false,
-  // shipsLeft: [null,4,3,2,1],
-  shipsLeft: [null,1,0,0,1],
+  shipsLeft: [null,4,3,2,1],
+  totalShipsLeft: 20,
+
+  // FOR FAST GAME
+  // shipsLeft: [null,1,0,0,0],
+  // totalShipsLeft: 1,
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -22,8 +25,12 @@ const playerTwo = {
   nickname: "",
 
   shipsPlaced: false,
-  // shipsLeft: [null,4,3,2,1],
-  shipsLeft: [null,1,0,0,1],
+  shipsLeft: [null,4,3,2,1],
+  totalShipsLeft: 20,
+
+  // FOR FAST GAME
+  // shipsLeft: [null,1,0,0,0],
+  // totalShipsLeft: 1,
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -52,8 +59,6 @@ changeNicknameButton.onclick = function () {
 };
 
 restartGameButton.onclick = function () {
-  sessionStorage.removeItem("playerOneNickname");
-  sessionStorage.removeItem("playerTwoNickname");
   location.reload();
 };
 
@@ -71,7 +76,9 @@ closeFormButton.onclick = function () {
     return;
   }
     changeNicknameForm.style.display = "none";
-}
+};
+
+let nicknamesRegex = /\w{2}/;
 
 function setNicknames() {
   if (changeNicknameForm.style.display === "none") {
@@ -84,12 +91,16 @@ function setNicknames() {
   if (p1NicknameInp.value === p2NicknameInp.value) {
     nicknameError("Nicknames must be different!");
     return;
-  } else {
+  } else if (!nicknamesRegex.test(p1NicknameInp.value) || !nicknamesRegex.test(p2NicknameInp.value)) {
+    nicknameError("Provide valid nickname!");
+    return;
+  }
+  else {
     playerOne.nickname = p1NicknameInp.value;
-    playerTwo.nickname = p2NicknameInp.value;  
+    playerTwo.nickname = p2NicknameInp.value;
 
-    sessionStorage.setItem("playerOneNickname", p1NicknameInp.value);
-    sessionStorage.setItem("playerTwoNickname", p2NicknameInp.value);
+    playerOne.nickname = playerOne.nickname.trim();
+    playerTwo.nickname = playerTwo.nickname.trim();
   
     document.getElementById("p1-nickname-text").innerHTML = playerOne.nickname;
     document.getElementById("p2-nickname-text").innerHTML = playerTwo.nickname;
@@ -144,7 +155,7 @@ function nicknameError(text) {
 
   changeNicknameForm.append(error);
     setTimeout(function () {
-      error.style.display = "none";
+      error.remove();
     }, 1500);
 }
 
@@ -177,10 +188,10 @@ function preGame() {
 
         coin.innerHTML = `${coinWinner} attacks first!`;
         coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
-        coin.style.color = "#39df57";
+        coin.style.color = "var(--main-bg-color)";
         coin.style.borderRadius = "50%";
-        coin.style.fontSize = "0.65em";
-        coin.style.letterSpacing = "1.5px";
+        coin.style.fontSize = "0.8em";
+        coin.style.letterSpacing = "2.5px";
   
         let startGameButton = document.createElement("button");
         
@@ -312,7 +323,7 @@ function chooseSell(player, cell) {
     }
   } else {
     nextTurn(currentPlayer);
-    showModalWindow("<small>You have placed all the ships. Give control to another player and press OK.</small>");
+    showModalWindow("<small>You have placed all the ships. Give controls to another player and press OK.</small>");
   }
 }
 
@@ -395,8 +406,6 @@ function placeShip(ship, cell) {
       
       let row = +cellClassList[0];
       let column = +cellClassList[1];
-
-      console.table("ROW", "COLUMN", row, column);
 
         if (row === 1) {
           availableAbove = true;
@@ -517,7 +526,7 @@ function placeShip(ship, cell) {
         if (!checkIfShipsLeft(playerOne) && !checkIfShipsLeft(playerTwo)) {
           
           setTimeout(function () {
-            showModalWindow("<small>ALL SHIPS ARE PLACED! BATTLE BEGINS! Give control to another player and press OK.</small>");
+            showModalWindow("<small>ALL SHIPS ARE PLACED! BATTLE BEGINS! Give controls to another player and press OK.</small>");
             nextTurn(currentPlayer);
             beginBattle();
           }, 1000);
@@ -525,7 +534,7 @@ function placeShip(ship, cell) {
          
 
           setTimeout(function () {
-            showModalWindow("<small>You have placed all ships. Give control to another player and press OK.</small>");
+            showModalWindow("<small>You have placed all ships. Give controls to another player and press OK.</small>");
             nextTurn(currentPlayer);
           }, 1000);
         }
@@ -563,8 +572,10 @@ function markBusyCells(cells, ocean, alreadyMarked = false) {
         if (each !== null) {
           let eachClassList = Array.from(each.classList);
 
-          if (!eachClassList.includes("ship") && !eachClassList.includes("busy") && !eachClassList.includes("damaged-ship")) {
-            each.classList.add("busy");
+          if (!eachClassList.includes("ship") && !eachClassList.includes("damaged-ship")) {
+            if (!eachClassList.includes("busy")) {
+              each.classList.add("busy");
+            }
             each.classList.add("missed-shot");
           }
         }
@@ -680,10 +691,10 @@ function showModalWindow(text) {
   modalErrorContainer.append(errorTextContainer);
 
   let closeError = document.createElement("div");
-  closeError.innerHTML = `<svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-x-square-fill"
-  fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2
-  2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0
-  0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`;
+  closeError.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+</svg>`;
  
   errorTextContainer.append(closeError);
   closeError.onclick = function() {
@@ -726,6 +737,9 @@ let nextTurnListener = function() {
 }
 
 function beginBattle() {
+  fillEmptyCells("ocean-one");
+  fillEmptyCells("ocean-two");
+
   playerOneOcean.removeEventListener("click", oceanOneListener);
   playerTwoOcean.removeEventListener("click", oceanTwoListener);
 
@@ -772,8 +786,6 @@ function attackCell(cell) {
   let sameCellOnEnemiesOcean = document.querySelector(`#${opponentsOcean} > div:nth-child(${row}) > div.cell.cell-${row}-${column}`);
   let sameCellClassList = Array.from(sameCellOnEnemiesOcean.classList);
 
-  checkForWin(currentPlayer);
-
   if (sameCellClassList.indexOf("ship") !== -1) {
     let typeOfDamagedShip = sameCellClassList.includes("1-sq") ? "1-sq" :
                             sameCellClassList.includes("2-sq") ? "2-sq" :
@@ -787,6 +799,9 @@ function attackCell(cell) {
     markDamagedShip(cell, currentShootingOcean, typeOfDamagedShip);
     markDamagedShip(cell, opponentsOcean, typeOfDamagedShip);
 
+    let opponent = currentPlayer.nickname === playerOne.nickname ? playerTwo : playerOne;
+    opponent.totalShipsLeft--;
+
     if (typeOfDamagedShip !== "1-sq") {
       cellsToMark.push(cell);
     }
@@ -794,17 +809,21 @@ function attackCell(cell) {
     let totalShipsAround = howManyShipsAround(cell, opponentsOcean);
     let markedShips = document.querySelectorAll(".marked");
 
-    console.log(`now ${markedShips.length} marked ships`);
-
     for (let each of markedShips) {
       each.classList.remove("marked");
     }
 
     if (totalShipsAround === 0) {
-      console.log(`NO SHIPS AROUND LEFT, MARKING ${cellsToMark}`);
       markBusyCells(cellsToMark, currentShootingOcean, true);
       markBusyCells(cellsToMark, opponentsOcean, true);
       cellsToMark = [];
+    };
+
+    if (checkForWin(opponent)) {
+      setTimeout(function () {
+        endGame(currentPlayer);
+      }, 600);
+      return;
     };
   }
   
@@ -817,15 +836,12 @@ function attackCell(cell) {
 
     sameCellOnEnemiesOcean.classList.add("missed-shot");
     cell.classList.add("missed-shot");
-    // cell.classList.add("busy");
     showModalWindow("MISSED! PRESS NEXT TURN!");
 
     playerOneShootingOcean.removeEventListener("click", shootingListener);
     playerTwoShootingOcean.removeEventListener("click", shootingListener);
   }
 }
-
-
 
 function howManyShipsAround(cell, ocean) {
   let totalShipsAround = 0;
@@ -838,7 +854,6 @@ function howManyShipsAround(cell, ocean) {
         let eachClassList = Array.from(each.classList);
 
         if (eachClassList.includes("ship") && !eachClassList.includes("marked")) {
-          console.log(`${each.classList} it's ship`);
           currentCell.classList.add("marked");
           totalShipsAround++;
           getNumberOfShips(each, currentOcean);
@@ -847,8 +862,6 @@ function howManyShipsAround(cell, ocean) {
     }
   }
   getNumberOfShips(cell, ocean);
-
-  console.log(`AROUND IS ${totalShipsAround} SHIP(S).`)
   return totalShipsAround;
 }
 
@@ -871,7 +884,6 @@ function getCellsAround(cell, ocean) {
 }
 
 function markDamagedShip(cell, ocean, shipType) {
-  console.log(`MARKING ${cell.classList} ON ${ocean}. TYPE: ${shipType}`);
   let cellClassList = cell.classList;
     cellClassList = cellClassList[1];
     cellClassList = cellClassList.split("-");
@@ -903,8 +915,6 @@ function markDamagedShip(cell, ocean, shipType) {
     }
 
     if (shipType === "1-sq") {
-      console.log("THIS IS 1SQ SHIP, MARKING BUSY CELLS");
-
       let cellAbove = document.querySelector(`#${ocean} > div:nth-child(${row-1}) > div.cell.cell-${row-1}-${column}`);
       let cellBelow = document.querySelector(`#${ocean} > div:nth-child(${row+1}) > div.cell.cell-${row+1}-${column}`);
       let cellLeft = document.querySelector(`#${ocean} > div:nth-child(${row}) > div.cell.cell-${row}-${column-1}`);
@@ -929,31 +939,47 @@ function markDamagedShip(cell, ocean, shipType) {
     }
 }
 
-function checkForWin(currentPlayer) {
-  console.log("*WIN* CURRENT PLAYER " + currentPlayer.nickname);
-  let opponent = currentPlayer.nickname === playerOne.nickname ? "player-one" : "player-two";
-  console.log(`*WIN* OPPONENT ${opponent}`);
-
-  let opponentsShipsCount = Array.from(document.querySelectorAll(`#${opponent} .ship`)).length;
-  console.log("*WIN* OPPONENTS SHIPS COUNT " + opponentsShipsCount);
-
-  if (opponentsShipsCount === 0) {
-    endGame(opponent);
+function checkForWin(opponentPlayer) {
+  if (opponentPlayer.totalShipsLeft <= 0) {
+    return true;
   }
+  return false;
 }
 
 function endGame(winner) {
-  console.log(`*******WIN******* WINNER IS ${winner.nickname}`);
   let endGameContainer = document.createElement("div");
   endGameContainer.classList.add("end-game-container");
 
   let statsContainer = document.createElement("div");
   statsContainer.classList.add("end-game-stats");
 
-  let statsText = document.createTextNode("STATS");
+  let statsText = document.createTextNode(`Congrats!
+  Winner is ${winner.nickname}`);
   statsContainer.appendChild(statsText);
 
+  let playAgainButton = document.createElement("button");
+  playAgainButton.innerHTML = "Play again";
+  playAgainButton.classList.add("play-again");
+  playAgainButton.addEventListener("click", function() {
+    location.reload();
+  })
+
+  statsContainer.appendChild(playAgainButton);
+  endGameContainer.appendChild(statsContainer);
   document.body.append(endGameContainer);
+}
+
+function fillEmptyCells(ocean) {
+  let cells = document.querySelectorAll(`#${ocean} .cell`);
+  cells = Array.from(cells);
+
+  let emptyCells = cells.filter(el => {
+    let cls = Array.from(el.classList);
+
+    if (!cls.includes("ship") && !cls.includes("busy")) {
+      return true;
+    }
+  }).map(el => el.classList.add("busy"));
 }
 
 // TODO: TIMER COUNTDOWN AFTER SHIPS PLACED
