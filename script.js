@@ -13,8 +13,8 @@ const playerOne = {
   totalShipsLeft: 20,
 
   // FOR FAST GAME
-  // shipsLeft: [null,1,0,0,0],
-  // totalShipsLeft: 1,
+  // shipsLeft: [null,2,0,0,0],
+  // totalShipsLeft: 2,
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -29,8 +29,8 @@ const playerTwo = {
   totalShipsLeft: 20,
 
   // FOR FAST GAME
-  // shipsLeft: [null,1,0,0,0],
-  // totalShipsLeft: 1,
+  // shipsLeft: [null,2,0,0,0],
+  // totalShipsLeft: 2,
 
   shotsTotal: 0,
   shotsInGoal: 0,
@@ -187,11 +187,12 @@ function preGame() {
         coin.classList.remove("spinning");
 
         coin.innerHTML = `${coinWinner} attacks first!`;
-        coin.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
-        coin.style.color = "var(--main-bg-color)";
+    
+        coin.style.color = "black";
         coin.style.borderRadius = "50%";
         coin.style.fontSize = "0.8em";
         coin.style.letterSpacing = "2.5px";
+        coin.style.border = "2px solid black";
   
         let startGameButton = document.createElement("button");
         
@@ -544,7 +545,7 @@ function placeShip(ship, cell) {
     return false;
   }
 }
-
+// OK
 function markBusyCells(cells, ocean, alreadyMarked = false) {
   for (let cell of cells) {
     let cellClassList = cell.classList;
@@ -583,28 +584,28 @@ function markBusyCells(cells, ocean, alreadyMarked = false) {
     }
 
     else {
-      if (cellAbove !== null) {
+      if (cellAbove !== null && !cellAbove.classList.contains("ship")) {
         cellAbove.classList.add("busy");
       }
-      if (cellLeft !== null) {
+      if (cellLeft !== null && !cellLeft.classList.contains("ship")) {
         cellLeft.classList.add("busy");
       } 
-      if (cellRight !== null) {
+      if (cellRight !== null && !cellRight.classList.contains("ship")) {
         cellRight.classList.add("busy");
       } 
-      if (cellBelow !== null) {
+      if (cellBelow !== null && !cellBelow.classList.contains("ship")) {
         cellBelow.classList.add("busy");
       } 
-      if (cellTopRight !== null) {
+      if (cellTopRight !== null && !cellTopRight.classList.contains("ship")) {
         cellTopRight.classList.add("busy");
       } 
-      if (cellTopLeft !== null) {
+      if (cellTopLeft !== null && !cellTopLeft.classList.contains("ship")) {
         cellTopLeft.classList.add("busy");
       } 
-      if (cellBottomRight !== null) {
+      if (cellBottomRight !== null && !cellBottomRight.classList.contains("ship")) {
         cellBottomRight.classList.add("busy");
       } 
-      if (cellBottomLeft !== null) {
+      if (cellBottomLeft !== null && !cellBottomLeft.classList.contains("ship")) {
         cellBottomLeft.classList.add("busy");
       } 
     }
