@@ -1,5 +1,5 @@
 "use strict";
-console.log("v1.01");
+console.log("v1.02");
 
 let coinWinner, actualOcean;
 let p1Nickname, p2Nickname;
