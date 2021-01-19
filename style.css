@@ -481,6 +481,35 @@ summary, summary:focus, summary:active {
     margin-left: -4px;
 }
 
+#nextTurnButton {
+     border: none;
+     font-size: 1em;
+     font-weight: bold;
+     padding: 20px 40px;
+     outline: none;
+     background-color: rgba(153, 153, 153, 0.63);
+     border-radius: 25px;
+}
+
+button:disabled {
+    color: rgb(110, 110, 110);
+    background-color: rgba(153, 153, 153, 0.63);
+    border-radius: 25px;
+    cursor: not-allowed;
+}
+
+button { 
+    cursor: pointer;
+}
+
+body > div.modal-error > div {
+    z-index: 10;
+}
+
+body > div.modal-error {
+    z-index: 11;
+}
+
 .damaged-ship:before {
     content: "";
     position: absolute;
@@ -505,27 +534,14 @@ summary, summary:focus, summary:active {
     margin-top: -8px;
 }
 
-#nextTurnButton {
-     border: none;
-     font-size: 1em;
-     font-weight: bold;
-     padding: 20px 40px;
-     outline: none;
-     background-color: rgba(153, 153, 153, 0.63);
-     border-radius: 25px;
+.end-game-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(214, 214, 214);
 }
 
-button:disabled {
-    color: rgb(110, 110, 110);
-    background-color: rgba(153, 153, 153, 0.63);
-    border-radius: 25px;
-    cursor: not-allowed;
-}
-
-button { 
-    cursor: pointer;
-}
-
-body > div.modal-error > div {
-    z-index: 10;
+.end-game-stats {
+    width: 500px;
+    height: 200px;
+    background-color: rgb(87, 87, 87);
 }
