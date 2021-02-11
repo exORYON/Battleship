@@ -1,11 +1,11 @@
 # Battleship-player-1-vs-player-2
 
-## [ IN DEVELOPING ] Famous battleship game. Play against your friend right here!
+## Famous battleship game. Play against your friend right here!
 
-### [Play now!](https://google.com)  ← join battle! // LINK WILL BE ADED LATER
+### [Play now!](https://exoryon.github.io/Battleship-player-1-vs-player-2/)  ← join battle! 
 
 1. Set-up nicknames
 2. Place your ships
 3. Attack!
 
-![alt text](https://www.pngitem.com/pimgs/m/551-5512881_transparent-battleship-png-png-download.png "Battleship")   
+![alt text](https://github.com/exORYON/Projects-preview/blob/main/battleship.jpg?raw=true "Battleship")

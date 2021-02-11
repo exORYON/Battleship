@@ -1,0 +1,24 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "1. Set-up nicknames\r 2. Place your ships\r 3. Attack!",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exORYON/Battleship-player-1-vs-player-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/exORYON/Battleship-player-1-vs-player-2/issues"
+  },
+  "homepage": "https://github.com/exORYON/Battleship-player-1-vs-player-2#readme",
+  "devDependencies": {
+    "@mate-academy/eslint-config": "0.0.13",
+    "eslint": "^7.19.0",
+    "eslint-plugin-node": "^11.1.0"
+  }
+}
